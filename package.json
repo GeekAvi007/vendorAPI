@@ -1,0 +1,22 @@
+{
+  "name": "vendorapi",
+  "version": "1.0.0",
+  "description": "",
+  "author": "Avishek",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon src/index.js",
+    "postinstall": "prisma skills sync || exit 0"
+  },
+  "dependencies": {
+    "@prisma/client": "^7.10.0",
+    "dotenv": "^18.0.3",
+    "express": "^5.2.1",
+    "nodemon": "^3.1.14"
+  },
+  "devDependencies": {
+    "prisma": "^7.10.0"
+  }
+}
