@@ -2,6 +2,8 @@ const bcrypt = require("bcrypt")
 const prisma = require("../lib/prisma.js");
 const AppError = require("../utils/AppError");
 const jwt = require("jsonwebtoken")
+
+
 async function registerUser({name, email ,password}) {
     
     // check if mail exist

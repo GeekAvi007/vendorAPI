@@ -37,7 +37,9 @@ async function login(req, res, next) {
             email,password
         })
 
-        return res.status(200).json({message: "User Logged in"},result)
+        return res.status(200).json({
+            message: "User Logged in",
+            ...result})
     } catch (error) {
         next(error)
     }
