@@ -17,13 +17,28 @@ async function createVendor({name, email, userId}) {
         );
     }
 
-    const vendor = await prisma.vendor.create({
-        data: {
-            name,email,userId
-        }
-    });
+    // create vendor using transaction
 
-    return vendor;
+    const result = await prisma.$transaction(async (tx) => {
+
+        // create vendor
+        const vendor = await tx.vendor.create({
+            data: {
+                name, email, userId
+            }
+        });
+
+
+
+        // create onboarding
+        const onboarding = await tx.onboarding.create({
+            data:{
+                vendorId: vendor.id
+            }
+        });
+        return { vendor, onboarding }
+    })
+    return result;
 }
 
 async function getVendor(userId) {
