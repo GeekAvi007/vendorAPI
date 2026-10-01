@@ -1,4 +1,5 @@
 const prisma = require("../lib/prisma.js");
+const { redis } = require("../lib/redis.js");
 const AppError = require("../utils/AppError");
 
 async function createVendor({name, email, userId}) {
@@ -43,14 +44,31 @@ async function createVendor({name, email, userId}) {
 
 async function getVendor(userId) {
     
-    return prisma.vendor.findMany({
-        where : {
+    const cacheKey = `vendors:user:${userId}`;
+
+    // check cache
+    const cached = await redis.get(cacheKey);
+
+    if(cached){
+        return JSON.parse(cached);
+    }
+
+    // database
+    const vendors = await prisma.vendor.findMany({
+        where: {
             userId
-        },
-        orderBy : {
-            createdAt : "desc"
         }
     });
+
+    await redis.set(
+        cacheKey,
+        JSON.stringify(vendors),
+        {
+            EX: 60
+        }
+    );
+
+    return vendors;
 }
 
 async function getVendorById({vendorId, userId}) {
